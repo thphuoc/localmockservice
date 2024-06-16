@@ -1,0 +1,20 @@
+{
+  "host": "127.0.0.1",
+  "port": 8081,
+  "endpoints": [
+    {
+      "name": "/api",
+      "method": "POST",
+      "response": "Ok",
+      "httpCode": 200
+    },
+    {
+      "name": "/api",
+      "method": "GET",
+      "response": {
+        "name": "Hello"
+      },
+      "httpCode": 500
+    }
+  ]
+}
