@@ -1,6 +1,7 @@
 {
   "host": "127.0.0.1",
-  "port": 8081,
+  "httpPort": 80,
+  "sslPort": 443,
   "endpoints": [
     {
       "name": "/api",

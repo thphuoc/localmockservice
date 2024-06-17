@@ -16,6 +16,7 @@ application {
 }
 
 dependencies {
+    implementation("io.ktor:ktor-network-tls-certificates:$ktor_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-server-cors:$ktor_version")
     implementation("io.ktor:ktor-server-double-receive:$ktor_version")

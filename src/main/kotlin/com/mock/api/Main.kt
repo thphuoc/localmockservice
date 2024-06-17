@@ -2,6 +2,7 @@ package com.mock.api
 
 import com.google.gson.Gson
 import io.ktor.http.*
+import io.ktor.network.tls.certificates.*
 import io.ktor.serialization.gson.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -21,11 +22,27 @@ fun main() {
         return
     }
     val mock = Gson().fromJson(FileReader("./mock.json").readText(), Mock::class.java)
-    embeddedServer(
-        Netty,
-        host = mock.host,
-        port = mock.port,
-        module = {
+
+    val keyStore = buildKeyStore {
+        certificate("sampleAlias") {
+            password = "foobar"
+            domains = listOf("127.0.0.1", "0.0.0.0", "localhost")
+        }
+    }
+    val keyStoreFile = File("./keystore.jks")
+    val environment = applicationEngineEnvironment {
+        connector {
+            port = mock.httpPort
+        }
+        sslConnector(
+            keyStore = keyStore,
+            keyAlias = "sampleAlias",
+            keyStorePassword = { "123456".toCharArray() },
+            privateKeyPassword = { "foobar".toCharArray() }) {
+            port = mock.sslPort
+            keyStorePath = keyStoreFile
+        }
+        module {
             install(ContentNegotiation) {
                 gson()
             }
@@ -71,5 +88,10 @@ fun main() {
                 }
             }
         }
+    }
+
+    embeddedServer(
+        Netty,
+        environment
     ).start(wait = true)
 }
